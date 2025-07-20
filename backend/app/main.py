@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.app.routes import generate, critique
+from backend.app.routes import generate, critique, projects
 
 
 app = FastAPI()
@@ -17,4 +17,5 @@ app.add_middleware(
 )
 
 app.include_router(generate.router)
-app.include_router(critique.router) 
+app.include_router(critique.router)
+app.include_router(projects.router) 

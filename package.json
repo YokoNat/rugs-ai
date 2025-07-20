@@ -1,0 +1,11 @@
+{
+  "name": "rugs_ai_partner_root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n BACKEND,FRONTEND -c green,cyan \"uvicorn backend.app.main:app --reload\" \"npm --prefix frontend run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}
