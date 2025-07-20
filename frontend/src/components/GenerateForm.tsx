@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const GenerateForm: React.FC = () => {
   const [topic, setTopic] = useState("");
   const [instructions, setInstructions] = useState("");
   const [result, setResult] = useState<string | null>(null);
+  const [prompts, setPrompts] = useState<any[]>([]);
+  const [selectedPrompt, setSelectedPrompt] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,9 +20,15 @@ const GenerateForm: React.FC = () => {
     setResult(null);
     
     try {
+      if(!selectedPrompt){
+        setError("Please select a prompt first.");
+        setLoading(false);
+        return;
+      }
       const response = await axios.post("http://localhost:8000/generate", {
         topic: topic.trim(),
         instructions: instructions.trim() || undefined,
+        prompt_id: selectedPrompt || undefined,
       });
       setResult(response.data.article);
     } catch (err: any) {
@@ -45,6 +53,18 @@ const GenerateForm: React.FC = () => {
     setResult(null);
     setError(null);
   };
+
+  useEffect(() => {
+    const fetchPrompts = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/prompts");
+        setPrompts(res.data.filter((p: any)=>p.type==='generation'));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchPrompts();
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -82,6 +102,20 @@ const GenerateForm: React.FC = () => {
               />
             </div>
             
+            <div className="space-y-3">
+              <label className="block text-sm font-medium">Choose Prompt</label>
+              <select
+                className="w-full border-gray-300 rounded px-3 py-2"
+                value={selectedPrompt || ""}
+                onChange={(e) => setSelectedPrompt(e.target.value || null)}
+              >
+                <option value="">— None —</option>
+                {prompts.map((p: any) => (
+                  <option key={p.id} value={p.id}>{p.title}</option>
+                ))}
+              </select>
+            </div>
+
             <div>
               <label htmlFor="instructions" className="block text-sm font-medium text-gray-700 mb-2">
                 Instructions <span className="text-gray-400">(Optional)</span>

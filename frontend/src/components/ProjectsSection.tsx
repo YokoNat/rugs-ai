@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Project {
   id: string;
@@ -11,11 +12,12 @@ interface Project {
 const API_BASE = "http://localhost:8000"; // Adjust if backend runs elsewhere
 
 interface Props {
-  onSelect: (project: Project) => void;
+  onSelect?: (project: Project) => void;
 }
 
 const ProjectsSection: React.FC<Props> = ({ onSelect }) => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const navigate = useNavigate();
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [loading, setLoading] = useState(false);
@@ -99,7 +101,13 @@ const ProjectsSection: React.FC<Props> = ({ onSelect }) => {
           <div
             key={project.id}
             className="p-4 bg-white rounded-xl shadow border border-gray-200 cursor-pointer hover:shadow-md"
-            onClick={() => onSelect(project)}
+            onClick={() => {
+              if (onSelect) {
+                onSelect(project);
+              } else {
+                navigate(`/projects/${project.id}`);
+              }
+            }}
           >
             <div className="flex justify-between items-start">
               <div>

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const CritiqueSection: React.FC = () => {
   const [markdown, setMarkdown] = useState("");
   const [result, setResult] = useState<string | null>(null);
+  const [prompts, setPrompts] = useState<any[]>([]);
+  const [selectedPrompt, setSelectedPrompt] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,6 +21,7 @@ const CritiqueSection: React.FC = () => {
     try {
       const response = await axios.post("http://localhost:8000/critique", {
         markdown: markdown.trim(),
+        prompt_id: selectedPrompt || undefined,
       });
       setResult(response.data.critique);
     } catch (err: any) {
@@ -51,6 +54,18 @@ const CritiqueSection: React.FC = () => {
       reader.readAsText(file);
     }
   };
+
+  useEffect(() => {
+    const fetchPrompts = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/prompts");
+        setPrompts(res.data.filter((p:any)=>p.type==='critique'));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchPrompts();
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -93,6 +108,20 @@ const CritiqueSection: React.FC = () => {
                   </label>
                 </div>
               </div>
+              <div className="space-y-3">
+                <label className="block text-sm font-medium">Choose Prompt</label>
+                <select
+                  className="w-full border-gray-300 rounded px-3 py-2"
+                  value={selectedPrompt || ""}
+                  onChange={(e) => setSelectedPrompt(e.target.value || null)}
+                >
+                  <option value="">Default system prompt</option>
+                  {prompts.map((p: any) => (
+                    <option key={p.id} value={p.id}>{p.title}</option>
+                  ))}
+                </select>
+              </div>
+
               <textarea
                 id="markdown"
                 value={markdown}

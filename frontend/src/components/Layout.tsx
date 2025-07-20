@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -30,27 +31,20 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
             {/* Navigation Menu - Desktop */}
             <nav className="hidden md:flex items-center space-x-8">
-              <a 
-                href="#" 
-                className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 relative group"
+              <NavLink 
+                to="/projects" 
+                className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-blue-600':'text-gray-700 hover:text-blue-600'}`}
               >
-                Dashboard
+                Projects
                 <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
-              </a>
-              <a 
-                href="#" 
-                className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 relative group"
+              </NavLink>
+              <NavLink 
+                to="/prompts" 
+                className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-blue-600':'text-gray-700 hover:text-blue-600'}`}
               >
-                Analytics
+                Prompts
                 <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
-              </a>
-              <a 
-                href="#" 
-                className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 relative group"
-              >
-                Settings
-                <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
-              </a>
+              </NavLink>
             </nav>
 
             {/* Right Side Actions */}
@@ -159,15 +153,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {isMobileMenuOpen && (
             <div className="md:hidden border-t border-white/20 bg-white/90 backdrop-blur-sm animate-slide-up">
               <div className="px-4 py-3 space-y-3">
-                <a href="#" className="block text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
-                  Dashboard
-                </a>
-                <a href="#" className="block text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
-                  Analytics
-                </a>
-                <a href="#" className="block text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
-                  Settings
-                </a>
+                <Link to="/projects" className="block text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                  Projects
+                </Link>
+                <Link to="/prompts" className="block text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                  Prompts
+                </Link>
                 <div className="pt-3 border-t border-gray-200">
                   <input
                     type="text"

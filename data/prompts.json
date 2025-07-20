@@ -1,0 +1,22 @@
+[
+  {
+    "id": "617259f1-0117-46df-a9fa-6978dbfc0db8",
+    "title": "Prompt #1 Pillar Pages",
+    "content": "This is a sample prompt for pillar page generation",
+    "category": "other",
+    "tags": [
+      "pillar"
+    ],
+    "type": "generation"
+  },
+  {
+    "id": "d0039c45-301b-49cb-bd81-b81a9641cfb1",
+    "title": "Prompt 2",
+    "content": "This is a test prompt",
+    "category": "other",
+    "tags": [
+      "test"
+    ],
+    "type": "generation"
+  }
+]

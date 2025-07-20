@@ -5,8 +5,8 @@ from utils.prompt_loader import load_prompt
 import openai
 
 
-def generate_article(topic: str, instructions: str = None) -> str:
-    system_prompt = load_prompt('system_prompt')
+def generate_article(topic: str, instructions: str | None = None, custom_prompt: str | None = None) -> str:
+    system_prompt = custom_prompt or load_prompt('system_prompt')
     user_prompt = f"Write an in-depth article about: {topic}"
     if instructions:
         user_prompt += f"\nInstructions: {instructions}"
@@ -21,8 +21,8 @@ def generate_article(topic: str, instructions: str = None) -> str:
     return article
 
 
-def critique_content(markdown: str) -> str:
-    system_prompt = load_prompt('critique')
+def critique_content(markdown: str, custom_prompt: str | None = None) -> str:
+    system_prompt = custom_prompt or load_prompt('critique')
     user_prompt = f"Please critique the following markdown content for SEO, clarity, and quality.\n\n{markdown}"
     response = openai.chat.completions.create(
         model="gpt-4",
