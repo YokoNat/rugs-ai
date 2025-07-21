@@ -115,44 +115,57 @@ const PromptLibrary: React.FC = () => {
 
       {/* Add Prompt Form */}
       {showAdd && (
-        <div className="p-4 bg-white rounded-xl shadow border border-gray-200 space-y-3 max-w-xl">
-          <input
-            className="w-full border-gray-300 rounded px-3 py-2"
-            placeholder="Title"
-            value={newPrompt.title}
-            onChange={(e) => setNewPrompt({ ...newPrompt, title: e.target.value })}
-          />
-          <textarea
-            className="w-full border-gray-300 rounded px-3 py-2 min-h-[120px]"
-            placeholder="Content / Prompt Template"
-            value={newPrompt.content}
-            onChange={(e) => setNewPrompt({ ...newPrompt, content: e.target.value })}
-          />
-          <input
-            className="w-full border-gray-300 rounded px-3 py-2 text-xs"
-            placeholder="Tags (comma separated)"
-            value={newPrompt.tags}
-            onChange={(e) => setNewPrompt({ ...newPrompt, tags: e.target.value })}
-            onKeyPress={(e) => {
-              if (e.key === "Enter") {
-                handleAdd();
-              }
-            }}
-          />
-          <select
-            className="w-full border-gray-300 rounded px-3 py-2 text-sm"
-            value={newPrompt.type}
-            onChange={(e)=>setNewPrompt({...newPrompt,type:e.target.value as "generation" | "critique"})}
-          >
-            <option value="generation">Generation</option>
-            <option value="critique">Critique</option>
-          </select>
-          <button
-            onClick={handleAdd}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-          >
-            Save
-          </button>
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-xl w-11/12 max-w-2xl p-6 space-y-4">
+            <h3 className="text-xl font-semibold">Add New Prompt</h3>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium">Title</label>
+              <input
+                className="w-full border border-gray-300 rounded px-3 py-2"
+                placeholder="Title"
+                value={newPrompt.title}
+                onChange={(e) => setNewPrompt({ ...newPrompt, title: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium">Content / Prompt Template</label>
+              <textarea
+                className="w-full border border-gray-300 rounded px-3 py-2 min-h-[160px]"
+                placeholder="Prompt content..."
+                value={newPrompt.content}
+                onChange={(e) => setNewPrompt({ ...newPrompt, content: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium">Tags (comma separated or press Enter)</label>
+              <input
+                className="w-full border border-gray-300 rounded px-3 py-2"
+                placeholder="e.g. pillar, seo"
+                value={newPrompt.tags}
+                onChange={(e) => setNewPrompt({ ...newPrompt, tags: e.target.value })}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    handleAdd();
+                  }
+                }}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium">Type</label>
+              <select
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+                value={newPrompt.type}
+                onChange={(e)=>setNewPrompt({...newPrompt,type:e.target.value as "generation" | "critique"})}
+              >
+                <option value="generation">Generation</option>
+                <option value="critique">Critique</option>
+              </select>
+            </div>
+            <div className="flex justify-end gap-3 pt-2">
+              <button onClick={()=>setShowAdd(false)} className="px-4 py-2 border rounded">Cancel</button>
+              <button onClick={handleAdd} className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Save</button>
+            </div>
+          </div>
         </div>
       )}
 

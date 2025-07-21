@@ -108,10 +108,10 @@ const CritiqueSection: React.FC = () => {
                   </label>
                 </div>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-3 mb-4">
                 <label className="block text-sm font-medium">Choose Prompt</label>
                 <select
-                  className="w-full border-gray-300 rounded px-3 py-2"
+                  className="w-full border border-gray-300 rounded px-3 py-2"
                   value={selectedPrompt || ""}
                   onChange={(e) => setSelectedPrompt(e.target.value || null)}
                 >
