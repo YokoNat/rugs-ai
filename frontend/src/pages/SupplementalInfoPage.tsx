@@ -10,6 +10,7 @@ const SupplementalInfoPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [tagFilter, setTagFilter] = useState<string | null>(null);
   const [showAdd, setShowAdd] = useState(false);
+  const [search,setSearch]=useState("");
 
   const fetchInfos = async () => {
     try {
@@ -39,9 +40,14 @@ const SupplementalInfoPage: React.FC = () => {
   }, [infos]);
 
   const filtered = useMemo(() => {
-    const base = infos;
-    return tagFilter ? base.filter((i) => i.tags.includes(tagFilter)) : base;
-  }, [infos, tagFilter]);
+    let base=infos;
+    if(tagFilter) base=base.filter(i=>i.tags.includes(tagFilter));
+    if(search.trim()){
+      const s=search.toLowerCase();
+      base=base.filter(i=> i.title.toLowerCase().includes(s)||i.content.toLowerCase().includes(s));
+    }
+    return base;
+  },[infos,tagFilter,search]);
 
   return (
     <div className="space-y-6">
@@ -70,6 +76,7 @@ const SupplementalInfoPage: React.FC = () => {
           )}
         </div>
       )}
+      <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search..." className="border px-3 py-2 rounded w-full md:w-1/2" />
 
       {loading ? (
         <p>Loading…</p>

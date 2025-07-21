@@ -17,6 +17,7 @@ const PromptLibrary: React.FC = () => {
   });
   const [tab, setTab] = useState<"generation" | "critique" | "planner">("generation");
   const [tagFilter, setTagFilter] = useState<string | null>(null);
+  const [search,setSearch]=useState("");
 
   const fetchPrompts = async () => {
     try {
@@ -35,9 +36,14 @@ const PromptLibrary: React.FC = () => {
   }, []);
 
   const filteredPrompts = useMemo(() => {
-    const base = prompts.filter(p=>p.type===tab);
-    return tagFilter ? base.filter((p) => p.tags.includes(tagFilter)) : base;
-  }, [prompts, tagFilter, tab]);
+    let base = prompts.filter(p=>p.type===tab);
+    if(tagFilter) base = base.filter(p=> p.tags.includes(tagFilter));
+    if(search.trim()){
+      const s = search.toLowerCase();
+      base = base.filter(p=> p.title.toLowerCase().includes(s) || p.content.toLowerCase().includes(s));
+    }
+    return base;
+  }, [prompts, tagFilter, tab, search]);
 
   const uniqueTags = useMemo(() => {
     const set = new Set<string>();
@@ -95,6 +101,7 @@ const PromptLibrary: React.FC = () => {
           <button key={t} onClick={()=>setTab(t)} className={`px-3 py-1 rounded-full text-sm ${tab===t? 'bg-blue-600 text-white':'bg-gray-100 text-gray-700'}`}>{t.charAt(0).toUpperCase()+t.slice(1)}</button>
         ))}
       </div>
+      <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search..." className="border px-3 py-2 rounded w-full md:w-1/2" />
 
       {/* Tag Filter */}
       {uniqueTags.length > 0 && (
