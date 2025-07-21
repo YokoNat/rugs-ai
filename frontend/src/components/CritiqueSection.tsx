@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import PromptModal from "./PromptModal";
 import axios from "axios";
 
 const CritiqueSection: React.FC = () => {
   const [markdown, setMarkdown] = useState("");
   const [result, setResult] = useState<string | null>(null);
   const [prompts, setPrompts] = useState<any[]>([]);
+  const [showModal, setShowModal] = useState(false);
   const [selectedPrompt, setSelectedPrompt] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -113,9 +115,13 @@ const CritiqueSection: React.FC = () => {
                 <select
                   className="w-full border border-gray-300 rounded px-3 py-2"
                   value={selectedPrompt || ""}
-                  onChange={(e) => setSelectedPrompt(e.target.value || null)}
+                  onChange={(e) => {
+                    const val=e.target.value;
+                    if(val==='__custom'){ setShowModal(true);} else { setSelectedPrompt(val||null);} 
+                  }}
                 >
                   <option value="">Default system prompt</option>
+                  <option value="__custom">Add Custom…</option>
                   {prompts.map((p: any) => (
                     <option key={p.id} value={p.id}>{p.title}</option>
                   ))}
@@ -236,6 +242,13 @@ Content goes here...
             </div>
           </div>
         </div>
+      )}
+      {showModal && (
+        <PromptModal
+          type="critique"
+          onClose={()=>{setShowModal(false); setSelectedPrompt("");}}
+          onSaved={(p)=>{ setPrompts(prev=>[...prev,p]); setSelectedPrompt(p.id);} }
+        />
       )}
     </div>
   );

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import PromptModal from "./PromptModal";
 
 const GenerateForm: React.FC = () => {
   const [topic, setTopic] = useState("");
   const [instructions, setInstructions] = useState("");
   const [result, setResult] = useState<string | null>(null);
   const [prompts, setPrompts] = useState<any[]>([]);
+  const [showModal, setShowModal] = useState(false);
   const [selectedPrompt, setSelectedPrompt] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +22,7 @@ const GenerateForm: React.FC = () => {
     setResult(null);
     
     try {
-      if(!selectedPrompt){
+      if(selectedPrompt===null || selectedPrompt===''){
         setError("Please select a prompt first.");
         setLoading(false);
         return;
@@ -107,9 +109,13 @@ const GenerateForm: React.FC = () => {
               <select
                 className="w-full border-gray-300 rounded px-3 py-2"
                 value={selectedPrompt || ""}
-                onChange={(e) => setSelectedPrompt(e.target.value || null)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if(val==='__custom') { setShowModal(true); } else { setSelectedPrompt(val || null);}  
+                }}
               >
                 <option value="">— None —</option>
+                <option value="__custom">Add Custom…</option>
                 {prompts.map((p: any) => (
                   <option key={p.id} value={p.id}>{p.title}</option>
                 ))}
@@ -221,6 +227,13 @@ const GenerateForm: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+      {showModal && (
+        <PromptModal
+          type="generation"
+          onClose={()=>{setShowModal(false); setSelectedPrompt('');}}
+          onSaved={(p)=>{ setPrompts(prev=>[...prev,p]); setSelectedPrompt(p.id); }}
+        />
       )}
     </div>
   );
