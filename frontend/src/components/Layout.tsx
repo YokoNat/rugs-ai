@@ -11,7 +11,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-cornsilk-500 via-beige-500 to-tea_green-500">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-white/20 bg-white/80 backdrop-blur-xl shadow-sm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -57,6 +57,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-blue-600':'text-gray-700 hover:text-blue-600'}`}
               >
                 Planner
+                <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+              </NavLink>
+              <NavLink 
+                to="/supplementals" 
+                className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-blue-600':'text-gray-700 hover:text-blue-600'}`}
+              >
+                Supplemental
                 <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
               </NavLink>
             </nav>
@@ -178,6 +185,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </Link>
                 <Link to="/planner" className="block text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
                   Planner
+                </Link>
+                <Link to="/supplementals" className="block text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                  Supplemental
                 </Link>
                 <div className="pt-3 border-t border-gray-200">
                   <input

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import EditablePromptCard from "../components/EditablePromptCard";
 import type { Prompt } from "../types";
+import { createPortal } from "react-dom";
 
 const API_BASE = "http://localhost:8000";
 
@@ -81,8 +82,9 @@ const PromptLibrary: React.FC = () => {
         <h2 className="text-2xl font-semibold">Prompt Library</h2>
         <button
           onClick={() => setShowAdd((s) => !s)}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-xl shadow-lg text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transform hover:scale-105 transition-all"
         >
+          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"/></svg>
           {showAdd ? "Cancel" : "Add Prompt"}
         </button>
       </div>
@@ -114,8 +116,8 @@ const PromptLibrary: React.FC = () => {
       )}
 
       {/* Add Prompt Form */}
-      {showAdd && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      {showAdd && createPortal(
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[100]">
           <div className="bg-white rounded-2xl shadow-xl w-11/12 max-w-2xl p-6 space-y-4">
             <h3 className="text-xl font-semibold">Add New Prompt</h3>
             <div className="space-y-2">
@@ -167,8 +169,7 @@ const PromptLibrary: React.FC = () => {
               <button onClick={handleAdd} className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Save</button>
             </div>
           </div>
-        </div>
-      )}
+        </div>, document.body)}
 
       {/* Prompt List */}
       {loading ? (

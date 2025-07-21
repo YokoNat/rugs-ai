@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import MarkdownViewer from "./MarkdownViewer";
 import PromptModal from "./PromptModal";
+import { useNavigate, useLocation } from "react-router-dom";
+import ProgressBar from "./ProgressBar";
+import type { SupplementalInfo } from "../types";
+import type { Prompt } from "../types";
 
 const GenerateForm: React.FC = () => {
   const [topic, setTopic] = useState("");
@@ -8,9 +13,44 @@ const GenerateForm: React.FC = () => {
   const [result, setResult] = useState<string | null>(null);
   const [prompts, setPrompts] = useState<any[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedPrompt, setSelectedPrompt] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [supplements,setSupplements]=useState<SupplementalInfo[]>([]);
+  const [selectedPrompts, setSelectedPrompts] = useState<Prompt[]>([]);
+
+  useEffect(()=>{
+    const idsJson=sessionStorage.getItem('selectedSupplements');
+    if(idsJson){
+      const ids: string[] = JSON.parse(idsJson);
+      if(ids.length){
+        fetch('http://localhost:8000/supplementals/').then(r=>r.json()).then((all:SupplementalInfo[])=>{
+          setSupplements(all.filter(i=>ids.includes(i.id)));
+        });
+      }
+    }
+  },[]);
+
+  useEffect(() => {
+    const idsJson = sessionStorage.getItem('selectedPrompts_generation');
+    if (idsJson) {
+      const ids: string[] = JSON.parse(idsJson);
+      if (ids.length) {
+        fetch('http://localhost:8000/prompts/').then(r => r.json()).then((all: Prompt[]) => {
+          setSelectedPrompts(all.filter(i => ids.includes(i.id)));
+        });
+      }
+    }
+  }, []);
+
+  useEffect(()=>{
+    sessionStorage.setItem('selectedPrompts_generation', JSON.stringify(selectedPrompts.map(p=>p.id)));
+  },[selectedPrompts]);
+
+  useEffect(()=>{
+    sessionStorage.setItem('selectedSupplements', JSON.stringify(supplements.map(s=>s.id)));
+  },[supplements]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -22,15 +62,17 @@ const GenerateForm: React.FC = () => {
     setResult(null);
     
     try {
-      if(selectedPrompt===null || selectedPrompt===''){
+      if(selectedPrompts.length===0){
         setError("Please select a prompt first.");
         setLoading(false);
         return;
       }
+      const supplementalText = supplements.map(s=>s.content).join("\n---\n");
       const response = await axios.post("http://localhost:8000/generate", {
         topic: topic.trim(),
         instructions: instructions.trim() || undefined,
-        prompt_id: selectedPrompt || undefined,
+        prompt_id: selectedPrompts[0]?.id,
+        supplemental: supplementalText || undefined,
       });
       setResult(response.data.article);
     } catch (err: any) {
@@ -70,6 +112,9 @@ const GenerateForm: React.FC = () => {
 
   return (
     <div className="space-y-8">
+      <ProgressBar loading={loading} />
+      {/* Supplemental select handled via navigation */}
+
       {/* Form Card */}
       <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
         <div className="px-8 py-6 border-b border-white/20 bg-gradient-to-r from-blue-50 to-purple-50">
@@ -104,22 +149,47 @@ const GenerateForm: React.FC = () => {
               />
             </div>
             
-            <div className="space-y-3">
-              <label className="block text-sm font-medium">Choose Prompt</label>
-              <select
-                className="w-full border-gray-300 rounded px-3 py-2"
-                value={selectedPrompt || ""}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  if(val==='__custom') { setShowModal(true); } else { setSelectedPrompt(val || null);}  
-                }}
-              >
-                <option value="">— None —</option>
-                <option value="__custom">Add Custom…</option>
-                {prompts.map((p: any) => (
-                  <option key={p.id} value={p.id}>{p.title}</option>
+            <div className="flex flex-wrap gap-4">
+            <button
+              type="button"
+              onClick={() => navigate('/prompts/select', { state: { returnTo: location.pathname, promptType: 'generation' }})}
+              className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-xl shadow-lg text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transform hover:scale-105 transition-all"
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              Choose Prompts
+            </button>
+
+            {selectedPrompts.length > 0 && (
+              <div className="flex flex-wrap gap-2 w-full">
+                <span className="text-sm font-medium mr-2">Prompts:</span>
+                {selectedPrompts.map(p => (
+                  <span key={p.id} className="flex items-center bg-buff-500 text-buff-100 px-3 py-2 rounded-full text-sm font-medium">
+                    {p.title}
+                    <button className="ml-2 text-buff-200 hover:text-white" onClick={() => setSelectedPrompts(prev => prev.filter(pr => pr.id !== p.id))}>×</button>
+                  </span>
                 ))}
-              </select>
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={() => navigate('/supplementals/select', { state: { returnTo: location.pathname }})}
+              className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-xl shadow-lg text-white bg-gradient-to-r from-emerald-500 to-lime-600 hover:from-emerald-600 hover:to-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transform hover:scale-105 transition-all"
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"/></svg>
+              Add Supplemental Info
+            </button>
+
+            {supplements.length>0 && (
+              <div className="flex flex-wrap gap-2 w-full mt-2">
+                <span className="text-sm font-medium mr-2">Supplemental:</span>
+                {supplements.map(s=> (
+                  <span key={s.id} className="flex items-center bg-buff-500 text-buff-100 px-3 py-2 rounded-full text-sm font-medium">
+                    {s.title}
+                    <button className="ml-2 text-buff-200 hover:text-white" onClick={()=>setSupplements(prev=>prev.filter(p=>p.id!==s.id))}>×</button>
+                  </span>
+                ))}
+              </div>
+            )}
             </div>
 
             <div>
@@ -209,10 +279,8 @@ const GenerateForm: React.FC = () => {
             </div>
           </div>
           <div className="p-8">
-            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 shadow-sm">
-              <pre className="whitespace-pre-wrap text-sm text-gray-900 font-mono leading-relaxed overflow-auto max-h-96">
-                {result}
-              </pre>
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 shadow-sm max-h-96 overflow-auto">
+              <MarkdownViewer content={result || ""} />
             </div>
             <div className="mt-4 flex justify-end">
               <button
@@ -231,8 +299,8 @@ const GenerateForm: React.FC = () => {
       {showModal && (
         <PromptModal
           type="generation"
-          onClose={()=>{setShowModal(false); setSelectedPrompt('');}}
-          onSaved={(p)=>{ setPrompts(prev=>[...prev,p]); setSelectedPrompt(p.id); }}
+          onClose={()=>{setShowModal(false); setSelectedPrompts([]);}}
+          onSaved={(p)=>{ setPrompts(prev=>[...prev,p]); setSelectedPrompts(prev=>[...prev,p]); }}
         />
       )}
     </div>

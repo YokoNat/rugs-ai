@@ -8,12 +8,14 @@ router = APIRouter(prefix="/planner", tags=["planner"])
 class PlanRequest(BaseModel):
     topic: str
     prompt_id: Optional[str] = None
+    supplemental: Optional[str] = None
 
 class PlanContinueRequest(BaseModel):
     topic: str
     prompt_id: Optional[str] = None
     messages: List[Dict[str, str]]
     user_message: str
+    supplemental: Optional[str] = None
 
 @router.post("/initial")
 def initial_plan(req: PlanRequest):
@@ -23,7 +25,7 @@ def initial_plan(req: PlanRequest):
         if not p:
             raise HTTPException(404, "Prompt not found")
         custom_prompt = p['content']
-    outline = ai_tools.generate_plan(req.topic, custom_prompt)
+    outline = ai_tools.generate_plan(req.topic, custom_prompt, req.supplemental)
     return {"outline": outline}
 
 @router.post("/continue")
@@ -34,5 +36,5 @@ def continue_plan(req: PlanContinueRequest):
         if not p:
             raise HTTPException(404, "Prompt not found")
         custom_prompt = p['content']
-    outline = ai_tools.continue_plan(req.topic, custom_prompt, req.messages, req.user_message)
+    outline = ai_tools.continue_plan(req.topic, custom_prompt, req.messages, req.user_message, req.supplemental)
     return {"outline": outline} 

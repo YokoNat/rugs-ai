@@ -10,6 +10,7 @@ class GenerateRequest(BaseModel):
     topic: str
     instructions: str | None = None
     prompt_id: str | None = None
+    supplemental: str | None = None
 
 @router.post("/generate")
 def generate(request: GenerateRequest):
@@ -19,5 +20,5 @@ def generate(request: GenerateRequest):
         if not p:
             raise HTTPException(status_code=404, detail="Prompt not found")
         custom_prompt = p["content"]
-    article = ai_tools.generate_article(request.topic, request.instructions, custom_prompt)
+    article = ai_tools.generate_article(request.topic, request.instructions, custom_prompt, request.supplemental)
     return {"article": article} 

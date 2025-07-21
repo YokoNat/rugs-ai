@@ -18,7 +18,12 @@ interface Props {
 
 const ProjectDashboard: React.FC<Props> = ({ project, onBack }) => {
   type SubTab = "generate" | "critique" | "planner";
-  const [tab, setTab] = useState<SubTab>("generate");
+  const [tab, setTab] = useState<SubTab>(() => (sessionStorage.getItem('projectTab') as SubTab) || "generate");
+
+  const changeTab = (t: SubTab)=>{
+    setTab(t);
+    sessionStorage.setItem('projectTab', t);
+  };
 
   const tabs: { id: SubTab; label: string }[] = [
     { id: "planner", label: "Planner" },
@@ -58,7 +63,7 @@ const ProjectDashboard: React.FC<Props> = ({ project, onBack }) => {
           {tabs.map((t) => (
             <button
               key={t.id}
-              onClick={() => setTab(t.id)}
+              onClick={() => changeTab(t.id)}
               className={`px-3 py-2 font-medium text-sm rounded-t-md focus:outline-none ${
                 tab === t.id
                   ? "border-b-2 border-blue-600 text-blue-600"

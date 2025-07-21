@@ -25,5 +25,14 @@
     "content": "speedy",
     "type": "critique",
     "tags": []
+  },
+  {
+    "id": "e3a8684c-e97b-45ca-9f4e-d4ca054a4c6a",
+    "title": "Test first plan",
+    "content": "Go back and forth with me until we have a good plan based on modern practices.\n\nMake sure each part of the outline adds up total to 3000 words as we are creating a category page for the topic.",
+    "type": "planner",
+    "tags": [
+      "jeeb"
+    ]
   }
 ]
