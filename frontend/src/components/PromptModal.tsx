@@ -4,7 +4,7 @@ import type { Prompt } from "../types";
 const API_BASE = "http://localhost:8000";
 
 interface Props {
-  type: "generation" | "critique";
+  type: "generation" | "critique" | "planner";
   onClose: () => void;
   onSaved: (p: Prompt) => void;
 }
@@ -43,7 +43,7 @@ const PromptModal: React.FC<Props> = ({ type, onClose, onSaved }) => {
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
       <div className="bg-white rounded-2xl shadow-xl w-11/12 max-w-2xl p-6 space-y-4">
-        <h3 className="text-xl font-semibold">Add Custom {type === "generation" ? "Generation" : "Critique"} Prompt</h3>
+        <h3 className="text-xl font-semibold">Add Custom {type.charAt(0).toUpperCase() + type.slice(1)} Prompt</h3>
         <div className="space-y-2">
           <label className="block text-sm font-medium">Title</label>
           <input

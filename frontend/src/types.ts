@@ -3,5 +3,5 @@ export interface Prompt {
   title: string;
   content: string;
   tags: string[];
-  type: "generation" | "critique";
+  type: "generation" | "critique" | "planner";
 } 

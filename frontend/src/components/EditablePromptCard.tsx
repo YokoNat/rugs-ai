@@ -79,9 +79,10 @@ const EditablePromptCard: React.FC<Props> = ({ prompt, onUpdated, onDeleted }) =
         <select
           className="w-full border border-gray-300 rounded px-2 py-1 text-xs"
           value={form.type}
-          onChange={(e)=>setForm({...form,type:e.target.value as "generation" | "critique"})}
+          onChange={(e)=>setForm({...form,type:e.target.value as "generation" | "critique" | "planner"})}
         >
           <option value="generation">Generation</option>
+          <option value="planner">Planner</option>
           <option value="critique">Critique</option>
         </select>
 

@@ -52,6 +52,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 Critique
                 <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
               </NavLink>
+              <NavLink 
+                to="/planner" 
+                className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-blue-600':'text-gray-700 hover:text-blue-600'}`}
+              >
+                Planner
+                <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+              </NavLink>
             </nav>
 
             {/* Right Side Actions */}
@@ -168,6 +175,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </Link>
                 <Link to="/critique" className="block text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
                   Critique
+                </Link>
+                <Link to="/planner" className="block text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                  Planner
                 </Link>
                 <div className="pt-3 border-t border-gray-200">
                   <input

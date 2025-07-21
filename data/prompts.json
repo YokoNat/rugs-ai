@@ -18,5 +18,12 @@
       "test"
     ],
     "type": "generation"
+  },
+  {
+    "id": "e7147480-ab27-4989-b8ca-ee0e34cd7c6a",
+    "title": "teeby",
+    "content": "speedy",
+    "type": "critique",
+    "tags": []
   }
 ]

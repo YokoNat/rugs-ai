@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import GenerateForm from "./GenerateForm";
 import CritiqueSection from "./CritiqueSection";
+import PlannerSection from "./PlannerSection";
 
 export interface Project {
   id: string;
@@ -16,10 +17,11 @@ interface Props {
 }
 
 const ProjectDashboard: React.FC<Props> = ({ project, onBack }) => {
-  type SubTab = "generate" | "critique";
+  type SubTab = "generate" | "critique" | "planner";
   const [tab, setTab] = useState<SubTab>("generate");
 
   const tabs: { id: SubTab; label: string }[] = [
+    { id: "planner", label: "Planner" },
     { id: "generate", label: "Generate" },
     { id: "critique", label: "Critique" },
   ];
@@ -71,6 +73,9 @@ const ProjectDashboard: React.FC<Props> = ({ project, onBack }) => {
 
       {/* Content */}
       {tab === "generate" && <GenerateForm />}
+      {tab === "planner" && (
+        <PlannerSection projectId={project.id} projectTitle={project.title} />
+      )}
       {tab === "critique" && <CritiqueSection />}
     </div>
   );

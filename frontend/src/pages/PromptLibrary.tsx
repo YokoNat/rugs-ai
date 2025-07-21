@@ -12,9 +12,9 @@ const PromptLibrary: React.FC = () => {
     title: "",
     content: "",
     tags: "",
-    type: "generation" as "generation" | "critique",
+    type: "generation" as "generation" | "critique" | "planner",
   });
-  const [tab, setTab] = useState<"generation" | "critique">("generation");
+  const [tab, setTab] = useState<"generation" | "critique" | "planner">("generation");
   const [tagFilter, setTagFilter] = useState<string | null>(null);
 
   const fetchPrompts = async () => {
@@ -40,9 +40,9 @@ const PromptLibrary: React.FC = () => {
 
   const uniqueTags = useMemo(() => {
     const set = new Set<string>();
-    prompts.forEach((p) => p.tags.forEach((t) => set.add(t)));
+    prompts.filter((p)=>p.type===tab).forEach((p) => p.tags.forEach((t) => set.add(t)));
     return Array.from(set);
-  }, [prompts]);
+  }, [prompts, tab]);
 
   const handleAdd = async () => {
     if (!newPrompt.title.trim() || !newPrompt.content.trim()) return;
@@ -89,7 +89,7 @@ const PromptLibrary: React.FC = () => {
 
       {/* Tabs */}
       <div className="flex gap-4">
-        {(["generation","critique"] as const).map(t=> (
+        {(["generation","planner","critique"] as const).map(t=> (
           <button key={t} onClick={()=>setTab(t)} className={`px-3 py-1 rounded-full text-sm ${tab===t? 'bg-blue-600 text-white':'bg-gray-100 text-gray-700'}`}>{t.charAt(0).toUpperCase()+t.slice(1)}</button>
         ))}
       </div>
@@ -155,9 +155,10 @@ const PromptLibrary: React.FC = () => {
               <select
                 className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                 value={newPrompt.type}
-                onChange={(e)=>setNewPrompt({...newPrompt,type:e.target.value as "generation" | "critique"})}
+                onChange={(e)=>setNewPrompt({...newPrompt,type:e.target.value as "generation" | "critique" | "planner"})}
               >
                 <option value="generation">Generation</option>
+                <option value="planner">Planner</option>
                 <option value="critique">Critique</option>
               </select>
             </div>
