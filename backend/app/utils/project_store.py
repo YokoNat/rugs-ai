@@ -8,9 +8,20 @@ PROJECTS_FILE = os.path.join(DATA_DIR, 'projects.json')
 
 # Ensure data directory and file exist
 os.makedirs(DATA_DIR, exist_ok=True)
-if not os.path.exists(PROJECTS_FILE):
+
+def _reset_projects_file():
     with open(PROJECTS_FILE, 'w', encoding='utf-8') as f:
-        json.dump([], f)
+        json.dump([], f, indent=2)
+
+try:
+    if os.path.exists(PROJECTS_FILE):
+        with open(PROJECTS_FILE, 'r', encoding='utf-8') as f:
+            json.load(f)  # Try to parse the JSON
+except json.JSONDecodeError:
+    _reset_projects_file()  # Reset if JSON is malformed
+
+if not os.path.exists(PROJECTS_FILE):
+    _reset_projects_file()
 
 def _read_projects() -> List[Dict]:
     with open(PROJECTS_FILE, 'r', encoding='utf-8') as f:

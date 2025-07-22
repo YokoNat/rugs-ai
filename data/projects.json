@@ -1,8 +1,15 @@
 [
   {
     "id": "580f1dbb-a83a-4d2d-bbe5-4fbf96ebda22",
-    "title": "yeets",
-    "description": "teetst",
+    "title": "yeet",
+    "description": "teet",
+    "custom_instructions": null,
+    "planning": null
+  },
+  {
+    "id": "eb7843f9-bc7c-48a1-b286-833852c26636",
+    "title": "Test Project",
+    "description": "Test Description",
     "custom_instructions": null,
     "planning": null
   }

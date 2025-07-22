@@ -37,18 +37,28 @@ const ProjectsSection: React.FC<Props> = ({ onSelect }) => {
   }, []);
 
   const handleCreate = async () => {
-    if (!newTitle.trim()) return;
+    console.log("handleCreate called with:", { newTitle, newDescription });
+    if (!newTitle.trim()) {
+      console.log("No title provided, returning early");
+      return;
+    }
     setLoading(true);
+    console.log("Making API request to create project");
     try {
       const res = await fetch(`${API_BASE}/projects/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: newTitle, description: newDescription }),
       });
+      console.log("API response:", res.status, res.statusText);
       if (res.ok) {
+        const createdProject = await res.json();
+        console.log("Project created successfully:", createdProject);
         setNewTitle("");
         setNewDescription("");
         fetchProjects();
+      } else {
+        console.error("API request failed:", res.status, res.statusText);
       }
     } catch (err) {
       console.error("Error creating project", err);
@@ -72,29 +82,36 @@ const ProjectsSection: React.FC<Props> = ({ onSelect }) => {
       <h2 className="text-2xl font-semibold">Projects</h2>
 
       {/* Create */}
-      <div className="bg-white p-4 rounded-xl shadow border border-gray-200 space-y-3">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleCreate();
+        }}
+        className="bg-white p-4 rounded-xl shadow border border-gray-200 space-y-3"
+      >
         <h3 className="font-medium">Create New Project</h3>
         <input
           value={newTitle}
           onChange={(e) => setNewTitle(e.target.value)}
           placeholder="Project Title"
-          className="w-full border-gray-300 rounded px-3 py-2"
+          className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          required
         />
         <textarea
           value={newDescription}
           onChange={(e) => setNewDescription(e.target.value)}
           placeholder="Description (optional)"
-          className="w-full border-gray-300 rounded px-3 py-2"
+          className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
         <button
-          onClick={handleCreate}
+          type="submit"
           disabled={loading}
           className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-xl shadow-lg text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 transition-all"
         >
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"/></svg>
           {loading ? "Creating..." : "Create"}
         </button>
-      </div>
+      </form>
 
       {/* List */}
       <div className="grid gap-4 md:grid-cols-2">

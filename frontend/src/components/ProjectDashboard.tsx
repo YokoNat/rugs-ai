@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GenerateForm from "./GenerateForm";
 import CritiqueSection from "./CritiqueSection";
 import PlannerSection from "./PlannerSection";
@@ -20,6 +20,29 @@ const ProjectDashboard: React.FC<Props> = ({ project, onBack }) => {
   type SubTab = "generate" | "critique" | "planner";
   const [tab, setTab] = useState<SubTab>(() => (sessionStorage.getItem('projectTab') as SubTab) || "generate");
 
+  const [title, setTitle] = useState(project.title);
+  const [description, setDescription] = useState(project.description || "");
+
+  useEffect(()=>{
+    setTitle(project.title);
+    setDescription(project.description || "");
+  },[project.id]);
+
+  const hasChanges = title.trim() !== project.title || description.trim() !== (project.description||"");
+
+  const saveChanges = async () => {
+    if(!hasChanges) return;
+    try{
+      await fetch(`http://localhost:8000/projects/${project.id}`,{
+        method:"PUT",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({title:title.trim(), description:description.trim()})
+      });
+    }catch(err){
+      console.error("Failed updating project",err);
+    }
+  };
+
   const changeTab = (t: SubTab)=>{
     setTab(t);
     sessionStorage.setItem('projectTab', t);
@@ -36,7 +59,7 @@ const ProjectDashboard: React.FC<Props> = ({ project, onBack }) => {
       {/* Header */}
       <div className="flex items-center space-x-4">
         <button
-          onClick={onBack}
+          onClick={async ()=>{await saveChanges(); onBack();}}
           className="text-blue-600 hover:underline flex items-center"
         >
           <svg
@@ -54,8 +77,16 @@ const ProjectDashboard: React.FC<Props> = ({ project, onBack }) => {
           </svg>
           Back to Projects
         </button>
-        <h2 className="text-2xl font-semibold">{project.title}</h2>
+        <input value={title} onChange={e=>setTitle(e.target.value)} className="text-2xl font-semibold flex-1 border-b border-transparent focus:border-blue-500 focus:outline-none" />
       </div>
+
+      {/* Description editable */}
+      <textarea
+        value={description}
+        onChange={e=>setDescription(e.target.value)}
+        placeholder="Project description..."
+        className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      />
 
       {/* Sub Tabs */}
       <div className="border-b border-gray-200">
