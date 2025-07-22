@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ProjectDashboard, { type Project } from "../components/ProjectDashboard";
 
 const API_BASE = "http://localhost:8000";
 
 const ProjectPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +30,13 @@ const ProjectPage: React.FC = () => {
   if (loading) return <p>Loading...</p>;
   if (error || !project) return <p className="text-red-500">{error}</p>;
 
-  return <ProjectDashboard project={project} onBack={() => window.history.back()} />;
+  // Always send the user to the full Projects list
+  return (
+    <ProjectDashboard
+      project={project}
+      onBack={() => navigate("/projects")}
+    />
+  );
 };
 
 export default ProjectPage; 

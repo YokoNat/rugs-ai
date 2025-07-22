@@ -95,3 +95,67 @@ def continue_plan(
 
     outline = response.choices[0].message.content.strip()
     return outline 
+
+# --- Refinement System Prompts ---
+_default_prompt_system = (
+    "You are an expert AI prompt engineer. You help users craft clear, specific, high quality prompts for large language models. Always return ONLY the improved prompt with no extra commentary."
+)
+
+_default_supplement_system = (
+    "You are a skilled technical writer. You refine user-provided supplemental information (reference text) by fixing grammar, simplifying where possible, and making the content concise while preserving meaning. Always return ONLY the improved text with no extra commentary."
+)
+
+
+def refine_text(text: str, mode: str, instruction: str | None = None, custom_system_prompt: str | None = None) -> str:
+    """Refine a prompt or supplemental text based on mode. instruction is the user request."""
+    system_prompt = custom_system_prompt or (
+        _default_prompt_system if mode == "prompt" else _default_supplement_system
+    )
+
+    user_content = (
+        f"Here is the current {'prompt' if mode=='prompt' else 'supplemental text'} to refine:\n---\n{text}\n---\n"
+        + (instruction or "Please improve it.")
+        + "\nReturn ONLY the refined version, no commentary."
+    )
+
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_content},
+    ]
+
+    try:
+        import openai
+
+        # Prefer GPT-4; fall back to GPT-3.5 if not available
+        def chat_completion(model_name:str):
+            # Prefer new SDK interface; fallback to legacy
+            try:
+                return openai.chat.completions.create(
+                    model=model_name,
+                    messages=messages,
+                    max_tokens=2048,
+                    temperature=0.7,
+                )
+            except AttributeError:
+                # Older SDK (<1.0)
+                return openai.ChatCompletion.create(
+                    model=model_name,
+                    messages=messages,
+                    max_tokens=2048,
+                    temperature=0.7,
+                )
+
+        try_model = "gpt-4o"
+        try:
+            completion = chat_completion(try_model)
+        except Exception:
+            completion = chat_completion("gpt-3.5-turbo")
+        # Handle response structure difference
+        if hasattr(completion, "choices"):
+            return completion.choices[0].message.content.strip()
+        else:  # openai>=1 returns object with choices list as attribute
+            return completion.choices[0].message.content.strip()
+    except Exception as e:
+        # Fallback – return original text if OpenAI fails
+        print("OpenAI refine_text error", e)
+        return text 

@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import ProgressBar from "./ProgressBar";
 import type { SupplementalInfo } from "../types";
 import type { Prompt } from "../types";
+import ExpandableTextarea from "./ExpandableTextarea";
 
 const GenerateForm: React.FC = () => {
   const [topic, setTopic] = useState("");
@@ -153,7 +154,7 @@ const GenerateForm: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate('/prompts/select', { state: { returnTo: location.pathname, promptType: 'generation' }})}
-              className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-xl shadow-lg text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transform hover:scale-105 transition-all"
+              className="btn btn-primary px-6 py-3 transform hover:scale-105 transition-all mb-4"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
               Choose Prompts
@@ -173,7 +174,7 @@ const GenerateForm: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate('/supplementals/select', { state: { returnTo: location.pathname }})}
-              className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-xl shadow-lg text-white bg-gradient-to-r from-emerald-500 to-lime-600 hover:from-emerald-600 hover:to-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transform hover:scale-105 transition-all"
+              className="btn btn-primary px-6 py-3 transform hover:scale-105 transition-all mb-4"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"/></svg>
               Add Supplemental Info
@@ -196,12 +197,11 @@ const GenerateForm: React.FC = () => {
               <label htmlFor="instructions" className="block text-sm font-medium text-gray-700 mb-2">
                 Instructions <span className="text-gray-400">(Optional)</span>
               </label>
-              <textarea
-                id="instructions"
+              <ExpandableTextarea
                 value={instructions}
-                onChange={handleInstructionsChange}
-                rows={4}
-                className="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm resize-none"
+                onChange={(e)=> setInstructions(e.target.value)}
+                overlayTitle="Edit Instructions"
+                className="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white/50 backdrop-blur-sm min-h-[120px]"
                 placeholder="Add specific instructions, style preferences, or requirements..."
                 disabled={loading}
               />
@@ -211,7 +211,7 @@ const GenerateForm: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading || !topic.trim()}
-                className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-xl shadow-lg text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100"
+                className="btn btn-primary px-6 py-3 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 transition-all"
               >
                 {loading ? (
                   <>

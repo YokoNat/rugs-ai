@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
+import ExpandableTextarea from "./ExpandableTextarea";
 import type { Prompt } from "../types";
 
 const API_BASE = "http://localhost:8000";
@@ -53,14 +54,14 @@ const PromptModal: React.FC<Props> = ({ type, onClose, onSaved }) => {
             onChange={(e) => setForm({ ...form, title: e.target.value })}
           />
         </div>
-        <div className="space-y-2">
-          <label className="block text-sm font-medium">Content</label>
-          <textarea
-            className="w-full border border-gray-300 rounded px-3 py-2 min-h-[160px]"
-            value={form.content}
-            onChange={(e) => setForm({ ...form, content: e.target.value })}
-          />
-        </div>
+        <ExpandableTextarea
+          label="Content / Prompt Template"
+          value={form.content}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>)=>setForm({...form, content:e.target.value})}
+          className="w-full border border-gray-300 rounded px-3 py-2 min-h-[160px]"
+          overlayTitle="Edit Prompt Template"
+          refineMode="prompt"
+        />
         <div className="space-y-2">
           <label className="block text-sm font-medium">Tags (comma or Enter)</label>
           <input

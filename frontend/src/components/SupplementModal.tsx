@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ExpandableTextarea from "./ExpandableTextarea";
 import { createPortal } from "react-dom";
 import type { SupplementalInfo } from "../types";
 
@@ -63,11 +64,13 @@ const SupplementModal: React.FC<Props> = ({ onClose, onSaved }) => {
           />
         </div>
         <div className="space-y-2">
-          <label className="block text-sm font-medium">Content</label>
-          <textarea
-            className="w-full border border-gray-300 rounded px-3 py-2 min-h-[160px]"
+          <ExpandableTextarea
+            label="Content"
             value={form.content}
-            onChange={(e) => setForm({ ...form, content: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>)=> setForm({...form, content:e.target.value})}
+            className="w-full border border-gray-300 rounded px-3 py-2 min-h-[160px]"
+            overlayTitle="Edit Supplemental Content"
+            refineMode="supplement"
           />
           <input type="file" accept=".txt,.md,.markdown,.html" onChange={handleFile} />
         </div>

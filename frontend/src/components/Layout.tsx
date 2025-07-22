@@ -18,7 +18,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="flex h-16 items-center justify-between">
             {/* Logo & Brand */}
             <div className="flex items-center space-x-4">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 shadow-lg">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-secondary-600 shadow-lg">
                 <span className="text-sm font-bold text-white">R</span>
               </div>
               <div className="hidden sm:block">
@@ -33,38 +33,38 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <nav className="hidden md:flex items-center space-x-8">
               <NavLink 
                 to="/projects" 
-                className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-blue-600':'text-gray-700 hover:text-blue-600'}`}
+                className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-primary-600':'text-gray-700 hover:text-primary-600'}`}
               >
                 Projects
-                <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+                <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
               </NavLink>
               <NavLink 
                 to="/prompts" 
-                className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-blue-600':'text-gray-700 hover:text-blue-600'}`}
+                className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-primary-600':'text-gray-700 hover:text-primary-600'}`}
               >
                 Prompts
-                <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+                <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
               </NavLink>
               <NavLink 
                 to="/critique" 
-                className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-blue-600':'text-gray-700 hover:text-blue-600'}`}
+                className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-primary-600':'text-gray-700 hover:text-primary-600'}`}
               >
                 Critique
-                <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+                <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
               </NavLink>
               <NavLink 
                 to="/planner" 
-                className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-blue-600':'text-gray-700 hover:text-blue-600'}`}
+                className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-primary-600':'text-gray-700 hover:text-primary-600'}`}
               >
                 Planner
-                <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+                <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
               </NavLink>
               <NavLink 
                 to="/supplementals" 
-                className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-blue-600':'text-gray-700 hover:text-blue-600'}`}
+                className={({isActive})=>`text-sm font-medium transition-colors duration-200 relative group ${isActive? 'text-primary-600':'text-gray-700 hover:text-primary-600'}`}
               >
                 Supplemental
-                <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+                <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
               </NavLink>
             </nav>
 
@@ -80,10 +80,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="block w-64 pl-10 pr-3 py-2 border border-gray-200 rounded-lg bg-white/50 backdrop-blur-sm text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  className="block w-64 pl-10 pr-3 py-2 border border-gray-200 rounded-lg bg-white/50 backdrop-blur-sm text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
                 />
               </div>
 
+              <Link to="/settings" className="text-gray-600 hover:text-primary-600">
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.983 4.357c.35-1.256 2.17-1.256 2.52 0l.282 1.012a1.243 1.243 0 001.84.79l.911-.512c1.118-.627 2.417.672 1.79 1.79l-.512.911a1.243 1.243 0 00.79 1.84l1.012.282c1.256.35 1.256 2.17 0 2.52l-1.012.282a1.243 1.243 0 00-.79 1.84l.512.911c.627 1.118-.672 2.417-1.79 1.79l-.911-.512a1.243 1.243 0 00-1.84.79l-.282 1.012c-.35 1.256-2.17 1.256-2.52 0l-.282-1.012a1.243 1.243 0 00-1.84-.79l-.911.512c-1.118.627-2.417-.672-1.79-1.79l.512-.911a1.243 1.243 0 00-.79-1.84l-1.012-.282c-1.256-.35-1.256-2.17 0-2.52l1.012-.282a1.243 1.243 0 00.79-1.84l-.512-.911c-.627-1.118.672-2.417 1.79-1.79l.911.512a1.243 1.243 0 001.84-.79l.282-1.012z" />
+                  <circle cx="12" cy="12" r="3" strokeWidth={2} stroke="currentColor" fill="none" />
+                </svg>
+              </Link>
               {/* Notifications */}
               <div className="relative">
                 <button

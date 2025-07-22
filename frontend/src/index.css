@@ -172,6 +172,10 @@
   .btn-ghost {
     @apply text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:ring-gray-500;
   }
+
+  .btn-danger {
+    @apply bg-gradient-to-r from-secondary-600 to-secondary-800 text-white shadow-lg hover:from-secondary-700 hover:to-secondary-900 focus:ring-secondary-500 transform hover:scale-105;
+  }
   
   /* Input Styles */
   .input {
